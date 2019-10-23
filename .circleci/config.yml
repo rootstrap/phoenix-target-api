@@ -12,7 +12,7 @@ jobs:
           POSTGRES_DB: target_test
           POSTGRES_PASSWORD: postgres
 
-    working_directory: ~/mnemosyne
+    working_directory: ~/target
 
     steps:
       - checkout
