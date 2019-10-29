@@ -40,5 +40,12 @@ defmodule TargetWeb.Endpoint do
     key: "_target_key",
     signing_salt: "h9JjppP1"
 
+  plug Plug.Session,
+    store: :cookie,
+    key: "_target_key",
+    signing_salt: "secret"
+
+  plug Pow.Plug.Session, otp_app: :target
+
   plug TargetWeb.Router
 end

@@ -17,6 +17,11 @@ config :target, TargetWeb.Endpoint,
   render_errors: [view: TargetWeb.ErrorView, accepts: ~w(json)],
   pubsub: [name: Target.PubSub, adapter: Phoenix.PubSub.PG2]
 
+# Configures pow
+config :target, :pow,
+  user: Target.Users.User,
+  repo: Target.Repo
+
 # Configures Elixir's Logger
 config :logger, :console,
   format: "$time $metadata[$level] $message\n",

@@ -45,7 +45,8 @@ defmodule Target.MixProject do
       {:plug_cowboy, "~> 2.0"},
       {:credo, "~> 1.1.0", only: [:dev, :test], runtime: false},
       {:junit_formatter, "~> 3.0", only: :test},
-      {:excoveralls, "~> 0.10", only: :test}
+      {:excoveralls, "~> 0.10", only: :test},
+      {:pow, "~> 1.0.14"}
     ]
   end
 
