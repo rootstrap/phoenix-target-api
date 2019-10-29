@@ -2,7 +2,7 @@
 
 ## Installing dependencies
 
-To run the project you need to have Elixir and Earlang installed. The easiest way to install them is using `asdf`, from [the guide](https://asdf-vm.com/#/core-manage-asdf-vm):
+To run the project you need to have Elixir and Erlang installed. The best way to install them is using a version manager (in this case `asdf`), from [the guide](https://asdf-vm.com/#/core-manage-asdf-vm):
 
 ```bash
 brew install asdf
@@ -23,6 +23,18 @@ asdf install erlang 22.1.5
 # Elixir
 asdf plugin-add elixir https://github.com/asdf-vm/asdf-elixir.git
 asdf install elixir 1.9.2
+```
+
+An easier alternative is to just use `brew`:
+
+```bash
+brew install elixir
+```
+
+After installing Elixir you'll need to install the phoenix package through hex, Elixir's package manager:
+
+```bash
+mix archive.install hex phx_new 1.4.10
 ```
 
 You'll also need to have Postgres installed, you can get the latest version with `brew`:
