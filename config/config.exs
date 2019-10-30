@@ -10,6 +10,11 @@ use Mix.Config
 config :target,
   ecto_repos: [Target.Repo]
 
+# Configures Pow module
+config :target, :pow,
+  user: Target.Users.User,
+  repo: Target.Repo
+
 # Configures the endpoint
 config :target, TargetWeb.Endpoint,
   url: [host: "localhost"],
