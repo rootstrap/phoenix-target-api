@@ -17,7 +17,7 @@ defmodule Target.Users.User do
     |> changeset_gender(attrs)
   end
 
-  def changeset_gender(user_or_changeset, attrs) do
+  defp changeset_gender(user_or_changeset, attrs) do
     user_or_changeset
     |> Ecto.Changeset.cast(attrs, [:gender])
     |> Ecto.Changeset.validate_inclusion(:gender, ~w(male female other))
