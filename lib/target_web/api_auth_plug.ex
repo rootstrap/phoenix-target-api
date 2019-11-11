@@ -7,7 +7,6 @@ defmodule TargetWeb.APIAuthPlug do
   alias PowPersistentSession.Store.PersistentSessionCache
 
   @impl true
-  @spec fetch(Conn.t(), Config.t()) :: {Conn.t(), map() | nil}
   def fetch(conn, config) do
     token = fetch_auth_token(conn)
 
@@ -21,7 +20,6 @@ defmodule TargetWeb.APIAuthPlug do
   end
 
   @impl true
-  @spec create(Conn.t(), map(), Config.t()) :: {Conn.t(), map()}
   def create(conn, user, config) do
     store_config = store_config(config)
     token = Pow.UUID.generate()
@@ -39,7 +37,6 @@ defmodule TargetWeb.APIAuthPlug do
   end
 
   @impl true
-  @spec delete(Conn.t(), Config.t()) :: Conn.t()
   def delete(conn, config) do
     token = fetch_auth_token(conn)
 
@@ -55,7 +52,6 @@ defmodule TargetWeb.APIAuthPlug do
 
   The renewal authorization token will be deleted from the store after the user id has been fetched.
   """
-  @spec renew(Conn.t(), Config.t()) :: {Conn.t(), map() | nil}
   def renew(conn, config) do
     renew_token = fetch_auth_token(conn)
     store_config = store_config(config)

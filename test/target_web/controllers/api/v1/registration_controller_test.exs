@@ -6,11 +6,12 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
       "user" => %{
         "email" => "test@example.com",
         "password" => "secret1234",
-        "confirm_password" => "secret1234"
+        "confirm_password" => "secret1234",
+        "gender" => "other"
       }
     }
     @invalid_params %{
-      "user" => %{"email" => "invalid", "password" => "secret1234", "confirm_password" => ""}
+      "user" => %{"email" => "invalid", "password" => "secret1234", "confirm_password" => "", "gender" => "invalid"}
     }
 
     test "with valid params", %{conn: conn} do
@@ -30,6 +31,7 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
       assert json["error"]["status"] == 422
       assert json["error"]["errors"]["confirm_password"] == ["not same as password"]
       assert json["error"]["errors"]["email"] == ["has invalid format"]
+      assert json["error"]["errors"]["gender"] == ["is invalid"]
     end
   end
 end

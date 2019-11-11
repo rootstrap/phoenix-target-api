@@ -4,7 +4,6 @@ defmodule TargetWeb.API.V1.SessionController do
   alias Plug.Conn
   alias TargetWeb.APIAuthPlug
 
-  @spec create(Conn.t(), map()) :: Conn.t()
   def create(conn, %{"user" => user_params}) do
     conn
     |> Pow.Plug.authenticate_user(user_params)
@@ -24,7 +23,6 @@ defmodule TargetWeb.API.V1.SessionController do
     end
   end
 
-  @spec renew(Conn.t(), map()) :: Conn.t()
   def renew(conn, _params) do
     config = Pow.Plug.fetch_config(conn)
 
@@ -46,7 +44,6 @@ defmodule TargetWeb.API.V1.SessionController do
     end
   end
 
-  @spec delete(Conn.t(), map()) :: Conn.t()
   def delete(conn, _params) do
     {:ok, conn} = Pow.Plug.clear_authenticated_user(conn)
 
