@@ -1,6 +1,8 @@
 defmodule TargetWeb.API.V1.RegistrationControllerTest do
   use TargetWeb.ConnCase
 
+  alias TargetWeb.APIAuthPlug
+
   describe "create/2" do
     @valid_params %{
       "user" => %{
@@ -11,7 +13,12 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
       }
     }
     @invalid_params %{
-      "user" => %{"email" => "invalid", "password" => "secret1234", "confirm_password" => "", "gender" => "invalid"}
+      "user" => %{
+        "email" => "invalid",
+        "password" => "secret1234",
+        "confirm_password" => "",
+        "gender" => "invalid"
+      }
     }
 
     test "with valid params", %{conn: conn} do

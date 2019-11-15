@@ -1,27 +1,18 @@
 defmodule TargetWeb.API.V1.SessionControllerTest do
   use TargetWeb.ConnCase
 
-  alias Pow.Ecto.Schema.Password
-  alias Target.{Repo, Users.User}
   alias TargetWeb.APIAuthPlug
 
   @pow_config [otp_app: :target]
 
-  setup %{conn: conn} do
-    user =
-      Repo.insert!(%User{
-        email: "test@example.com",
-        password_hash: Password.pbkdf2_hash("secret1234")
-      })
-
-    {:ok, conn: conn, user: user}
-  end
-
   describe "create/2" do
-    @valid_params %{"user" => %{"email" => "test@example.com", "password" => "secret1234"}}
+    @valid_credentials %{"email" => "test@example.com", "password" => "secret1234"}
+    @valid_params %{"user" => @valid_credentials}
     @invalid_params %{"user" => %{"email" => "test@example.com", "password" => "invalid"}}
 
-    test "with valid params", %{conn: conn} do
+    test "with valid params and confirmed email", %{conn: conn} do
+      create_user(@valid_credentials, :confirmed)
+
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @valid_params))
 
       assert json = json_response(conn, 200)
@@ -29,7 +20,18 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
       assert json["data"]["renew_token"]
     end
 
+    test "with valid params and unconfirmed email", %{conn: conn} do
+      create_user(@valid_credentials, :unconfirmed)
+
+      conn = post(conn, Routes.api_v1_session_path(conn, :create, @valid_params))
+      assert json = json_response(conn, 403)
+      assert json["error"]["message"] == "You must confirm your email address before logging in."
+      assert json["error"]["status"] == 403
+    end
+
     test "with invalid params", %{conn: conn} do
+      create_user(@valid_credentials, :confirmed)
+
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @invalid_params))
 
       assert json = json_response(conn, 401)
@@ -40,7 +42,12 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
   end
 
   describe "renew/2" do
-    setup %{conn: conn, user: user} do
+    setup %{conn: conn} do
+      user =
+        @valid_credentials
+        |> create_user(:confirmed)
+        |> elem(1)
+
       {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
       :timer.sleep(100)
@@ -73,7 +80,12 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
   end
 
   describe "delete/2" do
-    setup %{conn: conn, user: user} do
+    setup %{conn: conn} do
+      user =
+        @valid_credentials
+        |> create_user(:confirmed)
+        |> elem(1)
+
       {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
       :timer.sleep(100)
@@ -92,5 +104,19 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
 
       assert {_conn, nil} = APIAuthPlug.fetch(conn, @pow_config)
     end
+  end
+
+  defp create_user(params, :confirmed) do
+    params
+      |> Map.merge(%{"confirm_password" => "secret1234"})
+      |> Pow.Operations.create(@pow_config)
+      |> elem(1)
+      |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
+  end
+
+  defp create_user(params, :unconfirmed) do
+    params
+    |> Map.merge(%{"confirm_password" => "secret1234"})
+    |> Pow.Operations.create(@pow_config)
   end
 end

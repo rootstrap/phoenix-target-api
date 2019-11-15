@@ -21,6 +21,7 @@ defmodule TargetWeb.Router do
     resources "/registration", RegistrationController, singleton: true, only: [:create]
     resources "/session", SessionController, singleton: true, only: [:create, :delete]
     post "/session/renew", SessionController, :renew
+    get "/confirm-email/:id", ConfirmationController, :show
   end
 
   scope "/api/v1", TargetWeb.API.V1, as: :api_v1 do

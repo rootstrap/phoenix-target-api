@@ -3,13 +3,17 @@ defmodule TargetWeb.API.V1.RegistrationController do
 
   alias Ecto.Changeset
   alias Plug.Conn
+  alias Target.Users
+  alias TargetWeb.Endpoint
   alias TargetWeb.ErrorHelpers
 
   def create(conn, %{"user" => user_params}) do
     conn
     |> Pow.Plug.create_user(user_params)
     |> case do
-      {:ok, _user, conn} ->
+      {:ok, user, conn} ->
+        Users.send_confirmation_email(user, conn)
+
         json(conn, %{
           data: %{
             token: conn.private[:api_auth_token],

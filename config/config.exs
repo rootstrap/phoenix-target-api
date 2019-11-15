@@ -13,7 +13,16 @@ config :target,
 # Pow configuration for user authentication
 config :target, :pow,
   user: Target.Users.User,
-  repo: Target.Repo
+  repo: Target.Repo,
+  extensions: [PowEmailConfirmation],
+  mailer_backend: TargetWeb.PowMailer
+
+# Mailer config
+config :target, TargetWeb.PowMailer,
+  # Specify your preferred adapter
+  adapter: Bamboo.SendGridAdapter,
+  # Specify adapter-specific configuration
+  api_key: "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"
 
 # Configures the endpoint
 config :target, TargetWeb.Endpoint,
