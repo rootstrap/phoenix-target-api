@@ -2,7 +2,6 @@ defmodule TargetWeb.API.V1.RegistrationController do
   use TargetWeb, :controller
 
   alias Ecto.Changeset
-  alias Plug.Conn
   alias Target.Users
   alias TargetWeb.ErrorHelpers
 

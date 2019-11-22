@@ -3,8 +3,6 @@ defmodule TargetWeb.APIAuthErrorHandler do
 
   use TargetWeb, :controller
 
-  alias Plug.Conn
-
   def call(conn, :not_authenticated) do
     conn
     |> put_status(401)

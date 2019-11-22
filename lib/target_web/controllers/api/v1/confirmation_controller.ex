@@ -3,7 +3,6 @@ defmodule TargetWeb.API.V1.ConfirmationController do
 
   use TargetWeb, :controller
 
-  alias Plug.Conn
   alias PowEmailConfirmation.Plug
 
   def show(conn, %{"id" => token}) do

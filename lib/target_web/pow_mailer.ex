@@ -1,8 +1,6 @@
 defmodule TargetWeb.PowMailer do
   @moduledoc false
 
-  alias PowEmailConfirmation.Phoenix.Mailer
-
   use Pow.Phoenix.Mailer
   use Bamboo.Mailer, otp_app: :target
 

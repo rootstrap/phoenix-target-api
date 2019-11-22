@@ -4,13 +4,9 @@ defmodule Target.Users do
   """
 
   import Ecto.Query, warn: false
-  alias Target.Repo
 
-  alias PowEmailConfirmation.Phoenix.{ConfirmationController, Mailer}
-  alias PowEmailConfirmation.Plug, as: PowEmailConfirmationPlug
+  alias Target.Repo
   alias Target.Users.User
-  alias TargetWeb.Endpoint
-  alias TargetWeb.Router.Helpers, as: Routes
 
   def list_users do
     Repo.all(User)

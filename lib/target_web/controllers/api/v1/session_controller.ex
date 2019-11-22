@@ -1,7 +1,7 @@
 defmodule TargetWeb.API.V1.SessionController do
   use TargetWeb, :controller
 
-  alias Plug.Conn
+  # alias Plug.Conn
   alias Target.Users
   alias TargetWeb.APIAuthPlug
 
