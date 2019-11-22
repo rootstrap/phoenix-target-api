@@ -12,7 +12,6 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
 
     test "with valid params and confirmed email", %{conn: conn} do
       create_user(@valid_credentials, :confirmed)
-
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @valid_params))
 
       assert json = json_response(conn, 200)
@@ -22,20 +21,18 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
 
     test "with valid params and unconfirmed email", %{conn: conn} do
       create_user(@valid_credentials, :unconfirmed)
-
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @valid_params))
+
       assert json = json_response(conn, 403)
       assert json["error"]["message"] == "You must confirm your email address before logging in."
       assert json["error"]["status"] == 403
     end
 
-    test "with invalid params", %{conn: conn} do
+    test "with invalid pa rams", %{conn: conn} do
       create_user(@valid_credentials, :confirmed)
-
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @invalid_params))
 
       assert json = json_response(conn, 401)
-
       assert json["error"]["message"] == "Invalid email or password"
       assert json["error"]["status"] == 401
     end
@@ -108,10 +105,10 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
 
   defp create_user(params, :confirmed) do
     params
-      |> Map.merge(%{"confirm_password" => "secret1234"})
-      |> Pow.Operations.create(@pow_config)
-      |> elem(1)
-      |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
+    |> Map.merge(%{"confirm_password" => "secret1234"})
+    |> Pow.Operations.create(@pow_config)
+    |> elem(1)
+    |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
   end
 
   defp create_user(params, :unconfirmed) do

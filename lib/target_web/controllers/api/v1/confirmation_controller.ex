@@ -1,6 +1,6 @@
 defmodule TargetWeb.API.V1.ConfirmationController do
   @moduledoc false
-  # use Pow.Extension.Phoenix.Controller.Base
+
   use TargetWeb, :controller
 
   alias Plug.Conn

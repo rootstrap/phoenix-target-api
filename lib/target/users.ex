@@ -12,31 +12,27 @@ defmodule Target.Users do
   alias TargetWeb.Endpoint
   alias TargetWeb.Router.Helpers, as: Routes
 
-  @spec list_users :: any
   def list_users do
     Repo.all(User)
   end
 
-  def email_confirmed(conn, _params) do
-    case PowEmailConfirmationPlug.email_unconfirmed?(conn) do
-      true -> {false, conn}
-      false -> {true, conn}
-    end
+  def get_by_email(email) do
+    Repo.get_by(User, email: email)
   end
 
-  @spec send_confirmation_email(
-          %{email: any, email_confirmation_token: any, unconfirmed_email: any},
-          Plug.Conn.t()
-        ) :: any
-  def send_confirmation_email(user, conn) do
-    url = confirmation_url(user.email_confirmation_token)
+  def current_email_unconfirmed?(%{
+        unconfirmed_email: nil,
+        email_confirmation_token: token,
+        email_confirmed_at: nil
+      })
+      when not is_nil(token),
+      do: false
+
+  def current_email_unconfirmed?(_user),
+    do: true
+
+  def send_confirmation_email(user, deliver_confirmation_email) do
     unconfirmed_user = %{user | email: user.unconfirmed_email || user.email}
-    email = Mailer.email_confirmation(conn, unconfirmed_user, url)
-
-    Pow.Phoenix.Mailer.deliver(conn, email)
-  end
-
-  defp confirmation_url(token) do
-    Routes.api_v1_confirmation_url(Endpoint, :show, token)
+    deliver_confirmation_email.(unconfirmed_user)
   end
 end

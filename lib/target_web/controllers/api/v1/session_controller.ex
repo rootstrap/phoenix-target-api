@@ -5,11 +5,9 @@ defmodule TargetWeb.API.V1.SessionController do
   alias Target.Users
   alias TargetWeb.APIAuthPlug
 
-  plug :email_confirmation when action in [:show]
-
   def create(conn, %{"user" => user_params}) do
     with {:ok, conn} <- Pow.Plug.authenticate_user(conn, user_params),
-         {true, conn} <- email_confirmation(conn, {}) do
+         true <- email_confirmed?(user_params) do
       json(conn, %{
         data: %{
           token: conn.private[:api_auth_token],
@@ -22,7 +20,7 @@ defmodule TargetWeb.API.V1.SessionController do
         |> put_status(401)
         |> json(%{error: %{status: 401, message: "Invalid email or password"}})
 
-      {false, conn} ->
+      false ->
         conn
         |> put_status(403)
         |> json(%{
@@ -58,8 +56,9 @@ defmodule TargetWeb.API.V1.SessionController do
     json(conn, %{data: %{}})
   end
 
-  defp email_confirmation(conn, _params) do
-    conn
-    |> Users.email_confirmed({})
+  defp email_confirmed?(user_params) do
+    user_params["email"]
+    |> Users.get_by_email()
+    |> Users.current_email_unconfirmed?()
   end
 end
