@@ -4,14 +4,14 @@ defmodule TargetWeb.EmailConfirmationMailer do
   recently registered users so they can confirm their emails.
   """
 
-  alias PowEmailConfirmation.Phoenix.Mailer
+  alias PowEmailConfirmation.Phoenix.Mailer, as: PowEmailConfirmationMailer
   alias TargetWeb.Endpoint
   alias TargetWeb.Router.Helpers, as: Routes
 
   def deliver(conn, user, unconfirmed_user) do
     url = confirmation_url(user.email_confirmation_token)
 
-    email = Mailer.email_confirmation(conn, unconfirmed_user, url)
+    email = PowEmailConfirmationMailer.email_confirmation(conn, unconfirmed_user, url)
 
     Pow.Phoenix.Mailer.deliver(conn, email)
   end

@@ -24,7 +24,7 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
       }
     }
 
-    test "with valid params", %{conn: conn} do
+    test "with valid params creates an user", %{conn: conn} do
       conn = post(conn, Routes.api_v1_registration_path(conn, :create, @valid_params))
 
       user =
@@ -33,10 +33,23 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
         |> List.first()
 
       assert json = json_response(conn, 200)
-      assert json["data"]["token"]
-      assert json["data"]["renew_token"]
-      assert_received {:ok, token}
-      assert token = user.email_confirmation_token
+      assert json["user"]["id"]
+      assert json["user"]["id"] == user.id
+      assert json["user"]["email"]
+      assert json["user"]["email"] == user.email
+    end
+
+    test "with valid params sends a message (instead of an email) with the email confirmation token",
+         %{conn: conn} do
+      post(conn, Routes.api_v1_registration_path(conn, :create, @valid_params))
+
+      user =
+        User
+        |> Repo.all()
+        |> List.first()
+
+      assert_received {:ok, email_confirmation_token}
+      assert email_confirmation_token = user.email_confirmation_token
     end
 
     test "with invalid params", %{conn: conn} do

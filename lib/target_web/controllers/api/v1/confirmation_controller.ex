@@ -3,17 +3,17 @@ defmodule TargetWeb.API.V1.ConfirmationController do
 
   use TargetWeb, :controller
 
-  alias PowEmailConfirmation.Plug
+  alias PowEmailConfirmation.Plug, as: PowEmailConfirmation
 
   def show(conn, %{"id" => token}) do
     conn
-    |> Plug.confirm_email(token)
+    |> PowEmailConfirmation.confirm_email(token)
     |> case do
       {:ok, _user, conn} ->
-        redirect(conn, external: "https://confirmed-email-url/")
+        redirect(conn, external: System.get_env("CONFIRMATION_URL_REDIRECT_SUCCESS"))
 
       {:error, _changeset, conn} ->
-        redirect(conn, external: "https://not-confirmed-email-url/")
+        redirect(conn, external: System.get_env("CONFIRMATION_URL_REDIRECT_FAILURE"))
     end
   end
 end

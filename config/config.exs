@@ -7,6 +7,8 @@
 # General application configuration
 use Mix.Config
 
+import_config "env.local.exs"
+
 config :target,
   ecto_repos: [Target.Repo]
 
@@ -22,7 +24,7 @@ config :target, TargetWeb.PowMailer,
   # Specify your preferred adapter
   adapter: Bamboo.SendGridAdapter,
   # Specify adapter-specific configuration
-  api_key: "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"
+  api_key: System.get_env("SENDGRID_API_KEY")
 
 # Configures the endpoint
 config :target, TargetWeb.Endpoint,

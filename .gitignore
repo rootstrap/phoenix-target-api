@@ -29,3 +29,7 @@ target-*.tar
 
 # Ignore language support data
 .elixir_ls/
+
+# Environment Variables
+/.env
+/config/prod.secret.exs

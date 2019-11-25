@@ -15,9 +15,9 @@ defmodule TargetWeb.API.V1.RegistrationController do
         send_confirmation_email(conn, user)
 
         json(conn, %{
-          data: %{
-            token: conn.private[:api_auth_token],
-            renew_token: conn.private[:api_renew_token]
+          user: %{
+            id: user.id,
+            email: user.email
           }
         })
 

@@ -1,7 +1,6 @@
 defmodule TargetWeb.API.V1.SessionController do
   use TargetWeb, :controller
 
-  # alias Plug.Conn
   alias Target.Users
   alias TargetWeb.APIAuthPlug
 
@@ -56,9 +55,9 @@ defmodule TargetWeb.API.V1.SessionController do
     json(conn, %{data: %{}})
   end
 
-  defp email_confirmed?(user_params) do
-    user_params["email"]
+  defp email_confirmed?(%{"email" => email}) do
+    email
     |> Users.get_by_email()
-    |> Users.current_email_unconfirmed?()
+    |> Users.current_email_confirmed?()
   end
 end
