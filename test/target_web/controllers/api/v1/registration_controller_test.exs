@@ -27,16 +27,13 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
     test "with valid params creates an user", %{conn: conn} do
       conn = post(conn, Routes.api_v1_registration_path(conn, :create, @valid_params))
 
-      user =
+      %User{id: user_id, email: user_email} =
         User
         |> Repo.all()
         |> List.first()
 
       assert json = json_response(conn, 200)
-      assert json["user"]["id"]
-      assert json["user"]["id"] == user.id
-      assert json["user"]["email"]
-      assert json["user"]["email"] == user.email
+      assert %{"user" => %{"id" => ^user_id, "email" => ^user_email}} = json
     end
 
     test "with valid params sends a message (instead of an email) with the email confirmation token",
