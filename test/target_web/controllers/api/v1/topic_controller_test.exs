@@ -3,9 +3,7 @@ defmodule TargetWeb.API.V1.TopicControllerTest do
 
   alias Target.Targets
   alias Target.Targets.Topic
-  alias TargetWeb.APIAuthPlug
 
-  @pow_config [otp_app: :target]
   @create_attrs %{
     name: "some name"
   }
@@ -14,30 +12,19 @@ defmodule TargetWeb.API.V1.TopicControllerTest do
   }
   @invalid_attrs %{name: nil}
 
-  def fixture(:topic) do
-    {:ok, topic} = Targets.create_topic(@create_attrs)
-    topic
-  end
-
-  setup %{conn: conn} do
-    %{conn: conn, user_token: user_token} = create_user(conn)
-
-    conn =
-      conn
-      |> put_req_header("authorization", user_token)
-      |> put_req_header("accept", "application/json")
-
-    {:ok, conn: conn}
-  end
-
   describe "index" do
-    test "lists all topics", %{conn: conn} do
+    @describetag :authenticated
+    setup [:create_topic]
+
+    test "lists all topics", %{conn: conn, topic: topic} do
       conn = get(conn, Routes.api_v1_topic_path(conn, :index))
-      assert json_response(conn, 200)["data"] == []
+      assert json_response(conn, 200)["data"] == [%{"id" => topic.id, "name" => topic.name}]
     end
   end
 
   describe "create topic" do
+    @describetag :authenticated
+
     test "renders topic when data is valid", %{conn: conn} do
       conn = post(conn, Routes.api_v1_topic_path(conn, :create), topic: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -57,6 +44,7 @@ defmodule TargetWeb.API.V1.TopicControllerTest do
   end
 
   describe "update topic" do
+    @describetag :authenticated
     setup [:create_topic]
 
     test "renders topic when data is valid", %{conn: conn, topic: %Topic{id: id} = topic} do
@@ -78,6 +66,7 @@ defmodule TargetWeb.API.V1.TopicControllerTest do
   end
 
   describe "delete topic" do
+    @describetag :authenticated
     setup [:create_topic]
 
     test "deletes chosen topic", %{conn: conn, topic: topic} do
@@ -91,24 +80,7 @@ defmodule TargetWeb.API.V1.TopicControllerTest do
   end
 
   defp create_topic(_) do
-    topic = fixture(:topic)
+    {:ok, topic} = Targets.create_topic(@create_attrs)
     {:ok, topic: topic}
-  end
-
-  defp create_user(conn) do
-    user =
-      %{
-        "email" => "test_topic@example.com",
-        "password" => "secret1234",
-        "confirm_password" => "secret1234"
-      }
-      |> Pow.Operations.create(@pow_config)
-      |> elem(1)
-      |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
-      |> elem(1)
-
-    {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
-
-    %{conn: conn, user_token: authed_conn.private[:api_auth_token]}
   end
 end

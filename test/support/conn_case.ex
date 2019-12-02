@@ -14,6 +14,11 @@ defmodule TargetWeb.ConnCase do
   """
 
   use ExUnit.CaseTemplate
+  use Phoenix.ConnTest
+
+  alias TargetWeb.APIAuthPlug
+
+  @pow_config [otp_app: :target]
 
   using do
     quote do
@@ -33,6 +38,30 @@ defmodule TargetWeb.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(Target.Repo, {:shared, self()})
     end
 
-    {:ok, conn: Phoenix.ConnTest.build_conn()}
+    case tags[:authenticated] do
+      true ->
+        {:ok, user} =
+          %{
+            "email" => "test_topic@example.com",
+            "password" => "secret1234",
+            "confirm_password" => "secret1234"
+          }
+          |> Pow.Operations.create(@pow_config)
+          |> elem(1)
+          |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
+
+        conn = Phoenix.ConnTest.build_conn()
+        {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
+
+        conn =
+          conn
+          |> put_req_header("accept", "application/json")
+          |> put_req_header("authorization", authed_conn.private[:api_auth_token])
+
+        {:ok, conn: conn, user: user, user_token: authed_conn.private[:api_auth_token]}
+
+      _ ->
+        {:ok, conn: Phoenix.ConnTest.build_conn()}
+    end
   end
 end

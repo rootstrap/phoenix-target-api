@@ -20,7 +20,6 @@ defmodule TargetWeb.API.V1.TopicController do
     end
   end
 
-  @spec show(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     topic = Targets.get_topic!(id)
     render(conn, "show.json", topic: topic)

@@ -1,5 +1,9 @@
 defmodule Target.Targets.Topic do
-  @moduledoc "Target Module"
+  @moduledoc """
+  Topic Module
+  Targets will relate to a topic.
+  For target matching, their topics must coincide.
+  """
 
   use Ecto.Schema
   import Ecto.Changeset
@@ -15,5 +19,6 @@ defmodule Target.Targets.Topic do
     topic
     |> cast(attrs, [:name])
     |> validate_required([:name])
+    |> unique_constraint(:name)
   end
 end
