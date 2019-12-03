@@ -1,16 +1,16 @@
 use Mix.Config
 
 # Configure your database
-config :target, Target.Repo,
+config :target_mvd, TargetMvd.Repo,
   username: "postgres",
   password: "postgres",
-  database: "target_test",
+  database: "target_mvd_test",
   hostname: "localhost",
   pool: Ecto.Adapters.SQL.Sandbox
 
 # We don't run a server during test. If one is required,
 # you can enable the server option below.
-config :target, TargetWeb.Endpoint,
+config :target_mvd, TargetMvdWeb.Endpoint,
   http: [port: 4002],
   server: false
 
@@ -18,4 +18,4 @@ config :target, TargetWeb.Endpoint,
 config :logger, level: :warn
 
 # Config mock for mails
-config :target, :confirmation_mailer, TargetWeb.Mailer.InMemory
+config :target_mvd, :confirmation_mailer, TargetMvdWeb.Mailer.InMemory

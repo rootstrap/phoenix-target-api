@@ -1,4 +1,4 @@
-defmodule TargetWeb.ConnCase do
+defmodule TargetMvdWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -16,26 +16,26 @@ defmodule TargetWeb.ConnCase do
   use ExUnit.CaseTemplate
   use Phoenix.ConnTest
 
-  alias TargetWeb.APIAuthPlug
+  alias TargetMvdWeb.APIAuthPlug
 
-  @pow_config [otp_app: :target]
+  @pow_config [otp_app: :target_mvd]
 
   using do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      alias TargetWeb.Router.Helpers, as: Routes
+      alias TargetMvdWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint TargetWeb.Endpoint
+      @endpoint TargetMvdWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Target.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(TargetMvd.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Target.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(TargetMvd.Repo, {:shared, self()})
     end
 
     case tags[:authenticated] do

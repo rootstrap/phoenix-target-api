@@ -9,10 +9,10 @@ jobs:
       - image: circleci/postgres:10.1-alpine  # database image
         environment:  # environment variables for database
           POSTGRES_USER: postgres
-          POSTGRES_DB: target_test
+          POSTGRES_DB: target_mvd_test
           POSTGRES_PASSWORD: postgres
 
-    working_directory: ~/target
+    working_directory: ~/target_mvd
 
     steps:
       - checkout
@@ -55,7 +55,7 @@ jobs:
       - run: MIX_ENV=test mix coveralls.html -o cover
 
       - store_test_results:
-          path: _build/test/lib/target
+          path: _build/test/lib/target_mvd
 
       - store_artifacts:
           path: cover
