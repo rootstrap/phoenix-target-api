@@ -2,7 +2,7 @@ defmodule TargetMvd.Targets.Topic do
   @moduledoc """
   Topic Module
   Targets will relate to a topic.
-  For target_mvd matching, their topics must coincide.
+  For target matching, their topics must coincide.
   """
 
   use Ecto.Schema

@@ -10,6 +10,7 @@ defmodule TargetMvd.Users.User do
   schema "users" do
     pow_user_fields()
     field :gender, :string, default: "other"
+    has_many :targets, TargetMvd.Targets.Target
 
     timestamps()
   end

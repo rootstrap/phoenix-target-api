@@ -35,6 +35,7 @@ defmodule TargetMvdWeb.Router do
 
     # Your protected API endpoints here
     resources "/topic", TopicController, only: [:show, :index]
+    resources "/target", TargetController, only: [:create, :delete, :show, :index]
   end
 
   scope "/api/v1", TargetMvdWeb.API.V1, as: :api_v1 do

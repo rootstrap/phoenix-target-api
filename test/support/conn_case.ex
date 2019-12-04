@@ -38,30 +38,28 @@ defmodule TargetMvdWeb.ConnCase do
       Ecto.Adapters.SQL.Sandbox.mode(TargetMvd.Repo, {:shared, self()})
     end
 
-    case tags[:authenticated] do
-      true ->
-        {:ok, user} =
-          %{
-            "email" => "test_topic@example.com",
-            "password" => "secret1234",
-            "confirm_password" => "secret1234"
-          }
-          |> Pow.Operations.create(@pow_config)
-          |> elem(1)
-          |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
+    if tags[:authenticated] do
+      {:ok, user} =
+        %{
+          "email" => "test_topic@example.com",
+          "password" => "secret1234",
+          "confirm_password" => "secret1234"
+        }
+        |> Pow.Operations.create(@pow_config)
+        |> elem(1)
+        |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
 
-        conn = Phoenix.ConnTest.build_conn()
-        {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
+      conn = Phoenix.ConnTest.build_conn()
+      {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
-        conn =
-          conn
-          |> put_req_header("accept", "application/json")
-          |> put_req_header("authorization", authed_conn.private[:api_auth_token])
+      conn =
+        conn
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("authorization", authed_conn.private[:api_auth_token])
 
-        {:ok, conn: conn, user: user, user_token: authed_conn.private[:api_auth_token]}
-
-      _ ->
-        {:ok, conn: Phoenix.ConnTest.build_conn()}
+      {:ok, conn: conn, user: user}
+    else
+      {:ok, conn: Phoenix.ConnTest.build_conn()}
     end
   end
 end

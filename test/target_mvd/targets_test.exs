@@ -1,7 +1,9 @@
 defmodule TargetMvd.TargetsTest do
   use TargetMvd.DataCase
 
+  alias TargetMvd.Fixtures
   alias TargetMvd.Targets
+  alias TargetMvd.Users.User
 
   describe "topics" do
     alias TargetMvd.Targets.Topic
@@ -60,5 +62,73 @@ defmodule TargetMvd.TargetsTest do
       topic = topic_fixture()
       assert %Ecto.Changeset{} = Targets.change_topic(topic)
     end
+  end
+
+  describe "targets" do
+    alias TargetMvd.Targets.Target
+
+    setup [:create_topic, :create_user]
+
+    @valid_attrs %{latitude: 120.5, longitude: 120.5, radius: 42, title: "some title"}
+    @invalid_attrs %{latitude: nil, longitude: nil, radius: nil, title: nil}
+
+    def target_fixture(attrs \\ %{}, topic: topic, user: user) do
+      {:ok, target} =
+        attrs
+        |> Enum.into(@valid_attrs)
+        |> Map.merge(%{topic_id: topic.id, user_id: user.id})
+        |> Targets.create_target()
+
+      target
+    end
+
+    test "list_targets/0 returns all user targets", %{topic: topic, user: user} do
+      target = target_fixture(topic: topic, user: user)
+      assert Targets.list_targets(%User{id: user.id}) == [target]
+    end
+
+    test "get_target!/1 returns the target with given id", %{topic: topic, user: user} do
+      target = target_fixture(topic: topic, user: user)
+      assert Targets.get_target!(user, target.id) == target
+    end
+
+    test "create_target/1 with valid data creates a target", %{topic: topic, user: user} do
+      assert {:ok, %Target{} = target} =
+               Targets.create_target(
+                 Map.merge(@valid_attrs, %{topic_id: topic.id, user_id: user.id})
+               )
+
+      assert target.latitude == 120.5
+      assert target.longitude == 120.5
+      assert target.radius == 42
+      assert target.title == "some title"
+      assert target.topic_id == topic.id
+      assert target.user_id == user.id
+    end
+
+    test "create_target/1 with invalid data returns error changeset" do
+      assert {:error, %Ecto.Changeset{}} = Targets.create_target(@invalid_attrs)
+    end
+
+    test "delete_target/1 deletes the target", %{topic: topic, user: user} do
+      target = target_fixture(topic: topic, user: user)
+      assert {:ok, %Target{}} = Targets.delete_target(target)
+      assert_raise Ecto.NoResultsError, fn -> Targets.get_target!(user, target.id) end
+    end
+
+    test "change_target/1 returns a target changeset", %{topic: topic, user: user} do
+      target = target_fixture(topic: topic, user: user)
+      assert %Ecto.Changeset{} = Targets.change_target(target)
+    end
+  end
+
+  defp create_topic(_) do
+    topic = Fixtures.topic_fixture()
+    {:ok, topic: topic}
+  end
+
+  defp create_user(_) do
+    user = Fixtures.user_fixture()
+    {:ok, user: user}
   end
 end

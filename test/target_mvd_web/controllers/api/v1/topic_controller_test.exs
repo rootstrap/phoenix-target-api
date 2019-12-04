@@ -1,7 +1,9 @@
 defmodule TargetMvdWeb.API.V1.TopicControllerTest do
   use TargetMvdWeb.ConnCase
 
-  alias TargetMvd.Targets
+  @moduletag :authenticated
+
+  alias TargetMvd.Fixtures
   alias TargetMvd.Targets.Topic
 
   @create_attrs %{
@@ -13,7 +15,6 @@ defmodule TargetMvdWeb.API.V1.TopicControllerTest do
   @invalid_attrs %{name: nil}
 
   describe "index" do
-    @describetag :authenticated
     setup [:create_topic]
 
     test "lists all topics", %{conn: conn, topic: topic} do
@@ -23,8 +24,6 @@ defmodule TargetMvdWeb.API.V1.TopicControllerTest do
   end
 
   describe "create topic" do
-    @describetag :authenticated
-
     test "renders topic when data is valid", %{conn: conn} do
       conn = post(conn, Routes.api_v1_topic_path(conn, :create), topic: @create_attrs)
       assert %{"id" => id} = json_response(conn, 201)["data"]
@@ -44,7 +43,6 @@ defmodule TargetMvdWeb.API.V1.TopicControllerTest do
   end
 
   describe "update topic" do
-    @describetag :authenticated
     setup [:create_topic]
 
     test "renders topic when data is valid", %{conn: conn, topic: %Topic{id: id} = topic} do
@@ -66,7 +64,6 @@ defmodule TargetMvdWeb.API.V1.TopicControllerTest do
   end
 
   describe "delete topic" do
-    @describetag :authenticated
     setup [:create_topic]
 
     test "deletes chosen topic", %{conn: conn, topic: topic} do
@@ -80,7 +77,7 @@ defmodule TargetMvdWeb.API.V1.TopicControllerTest do
   end
 
   defp create_topic(_) do
-    {:ok, topic} = Targets.create_topic(@create_attrs)
+    topic = Fixtures.topic_fixture()
     {:ok, topic: topic}
   end
 end

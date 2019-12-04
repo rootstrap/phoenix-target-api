@@ -1,6 +1,7 @@
 defmodule TargetMvdWeb.API.V1.SessionControllerTest do
   use TargetMvdWeb.ConnCase
 
+  alias TargetMvd.Fixtures
   alias TargetMvdWeb.APIAuthPlug
 
   @pow_config [otp_app: :target_mvd]
@@ -11,7 +12,7 @@ defmodule TargetMvdWeb.API.V1.SessionControllerTest do
     @invalid_params %{"user" => %{"email" => "test@example.com", "password" => "invalid"}}
 
     test "with valid params and confirmed email", %{conn: conn} do
-      create_user(@valid_credentials, :confirmed)
+      _user = Fixtures.user_fixture()
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @valid_params))
 
       assert json = json_response(conn, 200)
@@ -29,7 +30,7 @@ defmodule TargetMvdWeb.API.V1.SessionControllerTest do
     end
 
     test "with invalid params", %{conn: conn} do
-      create_user(@valid_credentials, :confirmed)
+      _user = Fixtures.user_fixture()
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @invalid_params))
 
       assert json = json_response(conn, 401)
@@ -40,10 +41,7 @@ defmodule TargetMvdWeb.API.V1.SessionControllerTest do
 
   describe "renew/2" do
     setup %{conn: conn} do
-      user =
-        @valid_credentials
-        |> create_user(:confirmed)
-        |> elem(1)
+      user = Fixtures.user_fixture()
 
       {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
@@ -78,10 +76,7 @@ defmodule TargetMvdWeb.API.V1.SessionControllerTest do
 
   describe "delete/2" do
     setup %{conn: conn} do
-      user =
-        @valid_credentials
-        |> create_user(:confirmed)
-        |> elem(1)
+      user = Fixtures.user_fixture()
 
       {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
@@ -101,14 +96,6 @@ defmodule TargetMvdWeb.API.V1.SessionControllerTest do
 
       assert {_conn, nil} = APIAuthPlug.fetch(conn, @pow_config)
     end
-  end
-
-  defp create_user(params, :confirmed) do
-    params
-    |> Map.merge(%{"confirm_password" => "secret1234"})
-    |> Pow.Operations.create(@pow_config)
-    |> elem(1)
-    |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
   end
 
   defp create_user(params, :unconfirmed) do
