@@ -1,5 +1,10 @@
 defmodule TargetWeb.API.V1.RegistrationControllerTest do
+  use ExUnit.Case
+  use Bamboo.Test
   use TargetWeb.ConnCase
+
+  alias Target.Repo
+  alias Target.Users.User
 
   describe "create/2" do
     @valid_params %{
@@ -11,15 +16,37 @@ defmodule TargetWeb.API.V1.RegistrationControllerTest do
       }
     }
     @invalid_params %{
-      "user" => %{"email" => "invalid", "password" => "secret1234", "confirm_password" => "", "gender" => "invalid"}
+      "user" => %{
+        "email" => "invalid",
+        "password" => "secret1234",
+        "confirm_password" => "",
+        "gender" => "invalid"
+      }
     }
 
-    test "with valid params", %{conn: conn} do
+    test "with valid params creates an user", %{conn: conn} do
       conn = post(conn, Routes.api_v1_registration_path(conn, :create, @valid_params))
 
+      %User{id: user_id, email: user_email} =
+        User
+        |> Repo.all()
+        |> List.first()
+
       assert json = json_response(conn, 200)
-      assert json["data"]["token"]
-      assert json["data"]["renew_token"]
+      assert %{"user" => %{"id" => ^user_id, "email" => ^user_email}} = json
+    end
+
+    test "with valid params sends a message (instead of an email) with the email confirmation token",
+         %{conn: conn} do
+      post(conn, Routes.api_v1_registration_path(conn, :create, @valid_params))
+
+      user =
+        User
+        |> Repo.all()
+        |> List.first()
+
+      assert_received {:ok, email_confirmation_token}
+      assert email_confirmation_token = user.email_confirmation_token
     end
 
     test "with invalid params", %{conn: conn} do

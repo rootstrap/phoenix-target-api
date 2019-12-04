@@ -7,13 +7,24 @@
 # General application configuration
 use Mix.Config
 
+import_config "env.local.exs"
+
 config :target,
   ecto_repos: [Target.Repo]
 
 # Pow configuration for user authentication
 config :target, :pow,
   user: Target.Users.User,
-  repo: Target.Repo
+  repo: Target.Repo,
+  extensions: [PowEmailConfirmation],
+  mailer_backend: TargetWeb.PowMailer
+
+# Mailer config
+config :target, TargetWeb.PowMailer,
+  # Specify your preferred adapter
+  adapter: Bamboo.SendGridAdapter,
+  # Specify adapter-specific configuration
+  api_key: System.get_env("SENDGRID_API_KEY")
 
 # Configures the endpoint
 config :target, TargetWeb.Endpoint,

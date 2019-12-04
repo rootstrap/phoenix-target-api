@@ -16,3 +16,6 @@ config :target, TargetWeb.Endpoint,
 
 # Print only warnings and errors during test
 config :logger, level: :warn
+
+# Config mock for mails
+config :target, :confirmation_mailer, TargetWeb.Mailer.InMemory

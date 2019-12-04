@@ -52,7 +52,8 @@ defmodule Target.MixProject do
       {:junit_formatter, "~> 3.0", only: :test},
       {:excoveralls, "~> 0.10", only: :test},
       {:pow, "~> 1.0.14"},
-      {:ecto_enum, "~> 1.4"}
+      {:ecto_enum, "~> 1.4"},
+      {:bamboo, "~> 1.3"}
     ]
   end
 
