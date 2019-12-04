@@ -11,6 +11,12 @@ defmodule TargetWeb.Router do
       error_handler: TargetWeb.APIAuthErrorHandler
   end
 
+  # It reminds the same as long as no admin implementation is available
+  pipeline :admin do
+    plug Pow.Plug.RequireAuthenticated,
+      error_handler: TargetWeb.APIAuthErrorHandler
+  end
+
   scope "/api", TargetWeb do
     pipe_through :api
   end
@@ -28,5 +34,13 @@ defmodule TargetWeb.Router do
     pipe_through [:api, :api_protected]
 
     # Your protected API endpoints here
+    resources "/topic", TopicController, only: [:show, :index]
+  end
+
+  scope "/api/v1", TargetWeb.API.V1, as: :api_v1 do
+    pipe_through [:api, :api_protected, :admin]
+
+    # Your admin protected API endpoints here
+    resources "/topic", TopicController, only: [:create, :delete, :update]
   end
 end

@@ -28,7 +28,7 @@ defmodule TargetWeb.API.V1.SessionControllerTest do
       assert json["error"]["status"] == 403
     end
 
-    test "with invalid pa rams", %{conn: conn} do
+    test "with invalid params", %{conn: conn} do
       create_user(@valid_credentials, :confirmed)
       conn = post(conn, Routes.api_v1_session_path(conn, :create, @invalid_params))
 

@@ -53,7 +53,8 @@ defmodule Target.MixProject do
       {:excoveralls, "~> 0.10", only: :test},
       {:pow, "~> 1.0.14"},
       {:ecto_enum, "~> 1.4"},
-      {:bamboo, "~> 1.3"}
+      {:bamboo, "~> 1.3"},
+      {:poison, "~> 3.1"}
     ]
   end
 
