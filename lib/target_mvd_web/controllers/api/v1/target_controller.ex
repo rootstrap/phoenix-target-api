@@ -23,6 +23,11 @@ defmodule TargetMvdWeb.API.V1.TargetController do
       |> put_status(:created)
       |> put_resp_header("location", Routes.api_v1_target_path(conn, :show, target))
       |> render("show.json", target: target)
+    else
+      {:error, :maximum_reached} ->
+        conn
+        |> put_status(:unprocessable_entity)
+        |> render("target_limit_reached.json")
     end
   end
 

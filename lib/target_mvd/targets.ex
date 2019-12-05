@@ -47,9 +47,16 @@ defmodule TargetMvd.Targets do
   end
 
   def create_target(attrs \\ %{}) do
-    %Target{}
-    |> Target.changeset(attrs)
-    |> Repo.insert()
+    user = Repo.get!(User, attrs["user_id"]) |> Repo.preload(:targets)
+    targets = Enum.count(user.targets)
+
+    if targets >= 10 do
+      {:error, :maximum_reached}
+    else
+      %Target{}
+      |> Target.changeset(attrs)
+      |> Repo.insert()
+    end
   end
 
   def update_target(%Target{} = target, attrs) do
