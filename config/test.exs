@@ -1,5 +1,7 @@
 use Mix.Config
 
+import_config "env.local.exs"
+
 # Configure your database
 config :target_mvd, TargetMvd.Repo,
   username: "postgres",
