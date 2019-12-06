@@ -6,12 +6,12 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
   alias TargetMvd.Fixtures
 
   @create_attrs %{
-    latitude: 120.5,
-    longitude: 120.5,
-    radius: 42,
-    title: "some title"
+    "latitude" => 120.5,
+    "longitude" => 120.5,
+    "radius" => 42,
+    "title" => "some title"
   }
-  @invalid_attrs %{latitude: nil, longitude: nil, radius: nil, title: nil}
+  @invalid_attrs %{"latitude" => nil, "longitude" => nil, "radius" => nil, "title" => nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
@@ -76,6 +76,14 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.api_v1_target_path(conn, :create), target: @invalid_attrs)
+      assert json_response(conn, 422)["errors"] != %{}
+    end
+
+    test "renders errors when target limit reached", %{conn: conn, user: user} do
+      1..10
+      |> Enum.each(fn _ -> create_target(%{user: user}) end)
+
+      conn = post(conn, Routes.api_v1_target_path(conn, :create), target: @create_attrs)
       assert json_response(conn, 422)["errors"] != %{}
     end
   end

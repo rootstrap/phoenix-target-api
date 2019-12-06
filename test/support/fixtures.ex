@@ -15,10 +15,10 @@ defmodule TargetMvd.Fixtures do
     name: "some name"
   }
   @target_params %{
-    latitude: 120.5,
-    longitude: 120.5,
-    radius: 42,
-    title: "some title"
+    "latitude" => 120.5,
+    "longitude" => 120.5,
+    "radius" => 42,
+    "title" => "some title"
   }
 
   def user_fixture(params \\ @user_params) do
@@ -37,7 +37,7 @@ defmodule TargetMvd.Fixtures do
   end
 
   def target_fixture(params \\ @target_params, topic: topic, user: user) do
-    params = Map.merge(params, %{topic_id: topic.id, user_id: user.id})
+    params = Map.merge(params, %{"topic_id" => topic.id, "user_id" => user.id})
     {:ok, target} = Targets.create_target(params)
     target
   end

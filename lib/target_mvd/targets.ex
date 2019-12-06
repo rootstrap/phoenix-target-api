@@ -47,7 +47,7 @@ defmodule TargetMvd.Targets do
   end
 
   def create_target(attrs \\ %{}) do
-    user = Repo.get!(User, attrs["user_id"]) |> Repo.preload(:targets)
+    user = User |> Repo.get!(attrs["user_id"]) |> Repo.preload(:targets)
     targets = Enum.count(user.targets)
 
     if targets >= 10 do
