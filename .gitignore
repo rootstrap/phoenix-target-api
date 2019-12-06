@@ -33,4 +33,4 @@ target_mvd-*.tar
 # Environment Variables
 /.env
 /config/prod.secret.exs
-# /config/env.local.exs
+/config/env.local.exs
