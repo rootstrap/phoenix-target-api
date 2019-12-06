@@ -87,12 +87,12 @@ defmodule TargetMvd.TargetsTest do
       target
     end
 
-    test "list_targets/0 returns all user targets", %{topic: topic, user: user} do
+    test "list_targets/1 returns all user targets", %{topic: topic, user: user} do
       target = target_fixture(topic: topic, user: user)
       assert Targets.list_targets(%User{id: user.id}) == [target]
     end
 
-    test "get_target!/1 returns the target with given id", %{topic: topic, user: user} do
+    test "get_target!/2 returns the target with given id", %{topic: topic, user: user} do
       target = target_fixture(topic: topic, user: user)
       assert Targets.get_target!(user, target.id) == target
     end
@@ -103,12 +103,14 @@ defmodule TargetMvd.TargetsTest do
                  Map.merge(@valid_attrs, %{"topic_id" => topic.id, "user_id" => user.id})
                )
 
-      assert target.latitude == 120.5
-      assert target.longitude == 120.5
-      assert target.radius == 42
-      assert target.title == "some title"
-      assert target.topic_id == topic.id
-      assert target.user_id == user.id
+      assert target = %{
+               latitude: 120.5,
+               longitude: 120.5,
+               radius: 42,
+               title: "some title",
+               topic_id: topic.id,
+               user_id: user.id
+             }
     end
 
     test "create_target/1 with invalid data returns error changeset", %{topic: topic, user: user} do

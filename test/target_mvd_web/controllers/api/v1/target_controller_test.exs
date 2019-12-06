@@ -36,7 +36,7 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
   end
 
   describe "show" do
-    setup [:create_target, :create_another_target]
+    setup [:create_targets_list]
 
     test "shows user targets", %{conn: conn, target: target} do
       conn = get(conn, Routes.api_v1_target_path(conn, :show, target))
@@ -89,7 +89,7 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
   end
 
   describe "delete target" do
-    setup [:create_target, :create_another_target]
+    setup [:create_targets_list]
 
     test "deletes chosen target if its ours", %{conn: conn, target: target} do
       conn = delete(conn, Routes.api_v1_target_path(conn, :delete, target))
@@ -113,10 +113,11 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
     {:ok, target: target}
   end
 
-  defp create_another_target(_) do
+  defp create_targets_list(%{user: user}) do
+    {:ok, target: target} = create_target(%{user: user})
     topic = Fixtures.topic_fixture()
     user = Fixtures.user_fixture()
-    target = Fixtures.target_fixture(topic: topic, user: user)
-    {:ok, another_target: target}
+    another_target = Fixtures.target_fixture(topic: topic, user: user)
+    {:ok, another_target: another_target, target: target}
   end
 end

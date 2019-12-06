@@ -52,6 +52,9 @@ defmodule TargetMvdWeb.ConnCase do
       conn = Phoenix.ConnTest.build_conn()
       {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
+      # it seems like pow adds the user async so it needs some time to be present in its store
+      :timer.sleep(50)
+
       conn =
         conn
         |> put_req_header("accept", "application/json")
