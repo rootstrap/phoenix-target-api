@@ -70,18 +70,18 @@ defmodule TargetMvd.TargetsTest do
     setup [:create_topic, :create_user]
 
     @valid_attrs %{
-      "latitude" => 120.5,
-      "longitude" => 120.5,
-      "radius" => 42,
-      "title" => "some title"
+      latitude: 120.5,
+      longitude: 120.5,
+      radius: 42,
+      title: "some title"
     }
-    @invalid_attrs %{"latitude" => nil, "longitude" => nil, "radius" => nil, "title" => nil}
+    @invalid_attrs %{latitude: nil, longitude: nil, radius: nil, title: nil}
 
     def target_fixture(attrs \\ %{}, topic: topic, user: user) do
       {:ok, target} =
         attrs
         |> Enum.into(@valid_attrs)
-        |> Map.merge(%{"topic_id" => topic.id, "user_id" => user.id})
+        |> Map.merge(%{topic_id: topic.id, user_id: user.id})
         |> Targets.create_target()
 
       target
@@ -100,7 +100,7 @@ defmodule TargetMvd.TargetsTest do
     test "create_target/1 with valid data creates a target", %{topic: topic, user: user} do
       assert {:ok, %Target{} = target} =
                Targets.create_target(
-                 Map.merge(@valid_attrs, %{"topic_id" => topic.id, "user_id" => user.id})
+                 Map.merge(@valid_attrs, %{topic_id: topic.id, user_id: user.id})
                )
 
       assert target = %{
@@ -116,7 +116,7 @@ defmodule TargetMvd.TargetsTest do
     test "create_target/1 with invalid data returns error changeset", %{topic: topic, user: user} do
       assert {:error, %Ecto.Changeset{}} =
                Targets.create_target(
-                 Map.merge(@invalid_attrs, %{"topic_id" => topic.id, "user_id" => user.id})
+                 Map.merge(@invalid_attrs, %{topic_id: topic.id, user_id: user.id})
                )
     end
 

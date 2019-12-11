@@ -6,12 +6,12 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
   alias TargetMvd.Fixtures
 
   @create_attrs %{
-    "latitude" => 120.5,
-    "longitude" => 120.5,
-    "radius" => 42,
-    "title" => "some title"
+    latitude: 120.5,
+    longitude: 120.5,
+    radius: 42,
+    title: "some title"
   }
-  @invalid_attrs %{"latitude" => nil, "longitude" => nil, "radius" => nil, "title" => nil}
+  @invalid_attrs %{latitude: nil, longitude: nil, radius: nil, title: nil}
 
   setup %{conn: conn} do
     {:ok, conn: put_req_header(conn, "accept", "application/json")}
