@@ -76,7 +76,13 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
 
     test "renders errors when data is invalid", %{conn: conn} do
       conn = post(conn, Routes.api_v1_target_path(conn, :create), target: @invalid_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+
+      assert json_response(conn, 422)["errors"] == %{
+               "latitude" => ["can't be blank"],
+               "longitude" => ["can't be blank"],
+               "radius" => ["can't be blank"],
+               "title" => ["can't be blank"]
+             }
     end
 
     test "renders errors when target limit reached", %{conn: conn, user: user} do
@@ -84,7 +90,8 @@ defmodule TargetMvdWeb.API.V1.TargetControllerTest do
       |> Enum.each(fn _ -> create_target(%{user: user}) end)
 
       conn = post(conn, Routes.api_v1_target_path(conn, :create), target: @create_attrs)
-      assert json_response(conn, 422)["errors"] != %{}
+
+      assert json_response(conn, 422)["errors"]["detail"] == "Target maximum limit reached"
     end
   end
 

@@ -20,7 +20,7 @@ defmodule TargetMvdWeb.API.V1.TargetView do
     }
   end
 
-  def render("target_limit_reached.json", _) do
-    %{errors: %{detail: "Target maximum limit reached"}}
+  def render("error.json", %{detail: detail}) do
+    %{errors: %{detail: detail}}
   end
 end

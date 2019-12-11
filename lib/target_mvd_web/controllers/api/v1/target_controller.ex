@@ -4,7 +4,6 @@ defmodule TargetMvdWeb.API.V1.TargetController do
   alias Pow.Plug, as: PowPlug
   alias TargetMvd.Targets
   alias TargetMvd.Targets.Target
-  alias TargetMvdWeb.ChangesetView
 
   action_fallback TargetMvdWeb.FallbackController
 
@@ -19,27 +18,14 @@ defmodule TargetMvdWeb.API.V1.TargetController do
     current_user_id = PowPlug.current_user(conn).id
     target_params = Map.merge(target_params, %{"user_id" => current_user_id})
 
-    case Targets.create_target(target_params) do
-      {:ok, %Target{} = target} ->
-        conn
-        |> put_status(:created)
-        |> put_resp_header("location", Routes.api_v1_target_path(conn, :show, target))
-        |> render("show.json", target: target)
-
-      {:error, :maximum_reached} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> render("target_limit_reached.json")
-
-      {:error, changeset} ->
-        conn
-        |> put_status(:unprocessable_entity)
-        |> put_view(ChangesetView)
-        |> render("error.json", %{changeset: changeset})
+    with {:ok, %Target{} = target} <- Targets.create_target(target_params) do
+      conn
+      |> put_status(:created)
+      |> put_resp_header("location", Routes.api_v1_target_path(conn, :show, target))
+      |> render("show.json", target: target)
     end
   end
 
-  @spec show(Plug.Conn.t(), map) :: Plug.Conn.t()
   def show(conn, %{"id" => id}) do
     target = Targets.get_target!(PowPlug.current_user(conn), id)
     render(conn, "show.json", target: target)

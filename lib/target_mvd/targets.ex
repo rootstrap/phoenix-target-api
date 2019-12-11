@@ -47,8 +47,12 @@ defmodule TargetMvd.Targets do
   end
 
   def create_target(attrs \\ %{}) do
-    user = User |> Repo.get!(attrs["user_id"]) |> Repo.preload(:targets)
-    targets = Enum.count(user.targets)
+    user_id = extract_option(:user_id, attrs)
+
+    targets =
+      Target
+      |> where(user_id: ^user_id)
+      |> Repo.aggregate(:count, :id)
 
     if targets >= 10 do
       {:error, :maximum_reached}
@@ -71,5 +75,11 @@ defmodule TargetMvd.Targets do
 
   def change_target(%Target{} = target) do
     Target.changeset(target, %{})
+  end
+
+  defp extract_option(key, map, default \\ nil)
+
+  defp extract_option(key, map, default) when is_atom(key) do
+    map[key] || map[Atom.to_string(key)] || default
   end
 end
