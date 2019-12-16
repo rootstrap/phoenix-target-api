@@ -1,10 +1,10 @@
 use Mix.Config
 
 # Configure your database
-config :target, Target.Repo,
+config :target_mvd, TargetMvd.Repo,
   username: "postgres",
   password: "postgres",
-  database: "target_dev",
+  database: "target_mvd_dev",
   hostname: "localhost",
   show_sensitive_data_on_connection_error: true,
   pool_size: 10
@@ -15,7 +15,7 @@ config :target, Target.Repo,
 # The watchers configuration can be used to run external
 # watchers to your application. For example, we use it
 # with webpack to recompile .js and .css sources.
-config :target, TargetWeb.Endpoint,
+config :target_mvd, TargetMvdWeb.Endpoint,
   http: [port: 4000],
   debug_errors: true,
   code_reloader: true,
@@ -57,4 +57,4 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Config Pow Mailer
-config :target, :confirmation_mailer, TargetWeb.EmailConfirmationMailer
+config :target_mvd, :confirmation_mailer, TargetMvdWeb.EmailConfirmationMailer

@@ -1,4 +1,4 @@
-defmodule TargetWeb.Mailer.InMemory do
+defmodule TargetMvdWeb.Mailer.InMemory do
   @moduledoc """
   Email confirmation mailer module for test enviornment.
   Instead of sending emails, will send a messages to self()

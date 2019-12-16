@@ -1,4 +1,4 @@
-defmodule TargetWeb.ConnCase do
+defmodule TargetMvdWeb.ConnCase do
   @moduledoc """
   This module defines the test case to be used by
   tests that require setting up a connection.
@@ -16,52 +16,53 @@ defmodule TargetWeb.ConnCase do
   use ExUnit.CaseTemplate
   use Phoenix.ConnTest
 
-  alias TargetWeb.APIAuthPlug
+  alias TargetMvdWeb.APIAuthPlug
 
-  @pow_config [otp_app: :target]
+  @pow_config [otp_app: :target_mvd]
 
   using do
     quote do
       # Import conveniences for testing with connections
       use Phoenix.ConnTest
-      alias TargetWeb.Router.Helpers, as: Routes
+      alias TargetMvdWeb.Router.Helpers, as: Routes
 
       # The default endpoint for testing
-      @endpoint TargetWeb.Endpoint
+      @endpoint TargetMvdWeb.Endpoint
     end
   end
 
   setup tags do
-    :ok = Ecto.Adapters.SQL.Sandbox.checkout(Target.Repo)
+    :ok = Ecto.Adapters.SQL.Sandbox.checkout(TargetMvd.Repo)
 
     unless tags[:async] do
-      Ecto.Adapters.SQL.Sandbox.mode(Target.Repo, {:shared, self()})
+      Ecto.Adapters.SQL.Sandbox.mode(TargetMvd.Repo, {:shared, self()})
     end
 
-    case tags[:authenticated] do
-      true ->
-        {:ok, user} =
-          %{
-            "email" => "test_topic@example.com",
-            "password" => "secret1234",
-            "confirm_password" => "secret1234"
-          }
-          |> Pow.Operations.create(@pow_config)
-          |> elem(1)
-          |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
+    if tags[:authenticated] do
+      {:ok, user} =
+        %{
+          "email" => "test_topic@example.com",
+          "password" => "secret1234",
+          "confirm_password" => "secret1234"
+        }
+        |> Pow.Operations.create(@pow_config)
+        |> elem(1)
+        |> PowEmailConfirmation.Ecto.Context.confirm_email(@pow_config)
 
-        conn = Phoenix.ConnTest.build_conn()
-        {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
+      conn = Phoenix.ConnTest.build_conn()
+      {authed_conn, _user} = APIAuthPlug.create(conn, user, @pow_config)
 
-        conn =
-          conn
-          |> put_req_header("accept", "application/json")
-          |> put_req_header("authorization", authed_conn.private[:api_auth_token])
+      # it seems like pow adds the user async so it needs some time to be present in its store
+      :timer.sleep(50)
 
-        {:ok, conn: conn, user: user, user_token: authed_conn.private[:api_auth_token]}
+      conn =
+        conn
+        |> put_req_header("accept", "application/json")
+        |> put_req_header("authorization", authed_conn.private[:api_auth_token])
 
-      _ ->
-        {:ok, conn: Phoenix.ConnTest.build_conn()}
+      {:ok, conn: conn, user: user}
+    else
+      {:ok, conn: Phoenix.ConnTest.build_conn()}
     end
   end
 end

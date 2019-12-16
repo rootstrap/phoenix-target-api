@@ -9,29 +9,29 @@ use Mix.Config
 
 import_config "env.local.exs"
 
-config :target,
-  ecto_repos: [Target.Repo]
+config :target_mvd,
+  ecto_repos: [TargetMvd.Repo]
 
 # Pow configuration for user authentication
-config :target, :pow,
-  user: Target.Users.User,
-  repo: Target.Repo,
+config :target_mvd, :pow,
+  user: TargetMvd.Users.User,
+  repo: TargetMvd.Repo,
   extensions: [PowEmailConfirmation],
-  mailer_backend: TargetWeb.PowMailer
+  mailer_backend: TargetMvdWeb.PowMailer
 
 # Mailer config
-config :target, TargetWeb.PowMailer,
+config :target_mvd, TargetMvdWeb.PowMailer,
   # Specify your preferred adapter
   adapter: Bamboo.SendGridAdapter,
   # Specify adapter-specific configuration
   api_key: System.get_env("SENDGRID_API_KEY")
 
 # Configures the endpoint
-config :target, TargetWeb.Endpoint,
+config :target_mvd, TargetMvdWeb.Endpoint,
   url: [host: "localhost"],
   secret_key_base: "preFF1928Ui4jUCDfyfs+hqzknxvb+pdcS3oCoresbw2ysfPU2Gn8HyFXzd9uQdk",
-  render_errors: [view: TargetWeb.ErrorView, accepts: ~w(json)],
-  pubsub: [name: Target.PubSub, adapter: Phoenix.PubSub.PG2]
+  render_errors: [view: TargetMvdWeb.ErrorView, accepts: ~w(json)],
+  pubsub: [name: TargetMvd.PubSub, adapter: Phoenix.PubSub.PG2]
 
 # Configures Elixir's Logger
 config :logger, :console,

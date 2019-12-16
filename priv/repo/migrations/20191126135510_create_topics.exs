@@ -1,4 +1,4 @@
-defmodule Target.Repo.Migrations.CreateTopics do
+defmodule TargetMvd.Repo.Migrations.CreateTopics do
   use Ecto.Migration
 
   def change do
