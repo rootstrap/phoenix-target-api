@@ -5,9 +5,13 @@ defmodule TargetMvdWeb.Mailer.InMemory do
   containing the email confirmation token.
   """
 
-  def deliver(_conn, user, _unconfirmed_user) do
+  def deliver_email_confirmation(_conn, user, _unconfirmed_user) do
     token = user.email_confirmation_token
 
+    send(self(), {:ok, token})
+  end
+
+  def deliver_reset_password(_conn, _user, token) do
     send(self(), {:ok, token})
   end
 end

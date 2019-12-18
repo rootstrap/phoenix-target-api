@@ -18,4 +18,4 @@ config :target_mvd, TargetMvdWeb.Endpoint,
 config :logger, level: :warn
 
 # Config mock for mails
-config :target_mvd, :confirmation_mailer, TargetMvdWeb.Mailer.InMemory
+config :target_mvd, :mailer, TargetMvdWeb.Mailer.InMemory

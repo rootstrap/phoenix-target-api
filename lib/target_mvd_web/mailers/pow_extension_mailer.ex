@@ -1,14 +1,15 @@
-defmodule TargetMvdWeb.EmailConfirmationMailer do
+defmodule TargetMvdWeb.PowExtensionMailer do
   @moduledoc """
   Email confirmation mailer module. Used to deliver emails to
   recently registered users so they can confirm their emails.
   """
 
   alias PowEmailConfirmation.Phoenix.Mailer, as: PowEmailConfirmationMailer
+  alias PowResetPassword.Phoenix.Mailer, as: PowResetPasswordMailer
   alias TargetMvdWeb.Endpoint
   alias TargetMvdWeb.Router.Helpers, as: Routes
 
-  def deliver(conn, user, unconfirmed_user) do
+  def deliver_email_confirmation(conn, user, unconfirmed_user) do
     url = confirmation_url(user.email_confirmation_token)
 
     email = PowEmailConfirmationMailer.email_confirmation(conn, unconfirmed_user, url)
@@ -16,7 +17,20 @@ defmodule TargetMvdWeb.EmailConfirmationMailer do
     Pow.Phoenix.Mailer.deliver(conn, email)
   end
 
+  def deliver_reset_password(conn, user, token) do
+    # url = routes(conn).url_for(conn, __MODULE__, :edit, [token])
+
+    url = password_reset_url(token)
+    email = PowResetPasswordMailer.reset_password(conn, user, url)
+
+    Pow.Phoenix.Mailer.deliver(conn, email)
+  end
+
   defp confirmation_url(token) do
     Routes.api_v1_confirmation_url(Endpoint, :show, token)
+  end
+
+  defp password_reset_url(token) do
+    Routes.api_v1_reset_password_url(Endpoint, :edit, token)
   end
 end

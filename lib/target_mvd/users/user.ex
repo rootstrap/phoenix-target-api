@@ -5,7 +5,7 @@ defmodule TargetMvd.Users.User do
   use Pow.Ecto.Schema
 
   use Pow.Extension.Ecto.Schema,
-    extensions: [PowEmailConfirmation]
+    extensions: [PowEmailConfirmation, PowResetPassword]
 
   schema "users" do
     pow_user_fields()

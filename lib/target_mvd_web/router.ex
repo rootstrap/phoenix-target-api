@@ -28,6 +28,7 @@ defmodule TargetMvdWeb.Router do
     resources "/session", SessionController, singleton: true, only: [:create, :delete]
     post "/session/renew", SessionController, :renew
     get "/confirm-email/:id", ConfirmationController, :show
+    resources "/reset_password", ResetPasswordController, only: [:create, :update, :show]
   end
 
   scope "/api/v1", TargetMvdWeb.API.V1, as: :api_v1 do
