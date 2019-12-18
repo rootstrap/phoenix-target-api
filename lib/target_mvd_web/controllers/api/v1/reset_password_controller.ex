@@ -22,7 +22,7 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordController do
       {:error, _changeset, conn} ->
         conn
         |> put_status(422)
-        |> json(%{error: %{status: 422, message: "User doesn't exist"}})
+        |> json(%{error: %{status: 422, message: dgettext("errors", "User doesn't exist")}})
     end
   end
 

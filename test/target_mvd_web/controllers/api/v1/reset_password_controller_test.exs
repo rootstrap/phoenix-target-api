@@ -13,7 +13,6 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordControllerTest do
   }
 
   describe "create/2" do
-    # $$ moduletag?
     setup [:create_user]
 
     test "with a valid user email sends generated token", %{conn: conn, user: user} do
@@ -56,7 +55,7 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordControllerTest do
       assert_received {:ok, reset_password_token}
 
       conn =
-        build_conn()
+        conn
         |> put_req_header("content-type", "application/json")
         |> put(
           Routes.api_v1_reset_password_path(Endpoint, :update, reset_password_token),
@@ -65,7 +64,17 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordControllerTest do
 
       assert json = json_response(conn, 200)
       assert json["detail"] == "Password updated successfully."
-      # $$ how to check if password was indeed updated?
+
+      conn =
+        post(
+          conn,
+          Routes.api_v1_session_path(conn, :create, %{
+            user: %{email: user.email, password: "secret1234"}
+          })
+        )
+
+      assert json = json_response(conn, 200)
+      assert json["data"]["token"]
     end
 
     test "with an invalid token renders error", %{conn: conn} do

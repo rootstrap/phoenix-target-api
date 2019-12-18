@@ -18,12 +18,12 @@ defmodule TargetMvdWeb.PowExtensionMailer do
   end
 
   def deliver_reset_password(conn, user, token) do
-    # url = routes(conn).url_for(conn, __MODULE__, :edit, [token])
-
     url = password_reset_url(token)
+
     email = PowResetPasswordMailer.reset_password(conn, user, url)
 
     Pow.Phoenix.Mailer.deliver(conn, email)
+    {:ok}
   end
 
   defp confirmation_url(token) do
@@ -31,6 +31,6 @@ defmodule TargetMvdWeb.PowExtensionMailer do
   end
 
   defp password_reset_url(token) do
-    Routes.api_v1_reset_password_url(Endpoint, :edit, token)
+    Routes.api_v1_reset_password_url(Endpoint, :show, token)
   end
 end
