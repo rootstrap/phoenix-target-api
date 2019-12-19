@@ -47,9 +47,20 @@ defmodule TargetMvd.Targets do
   end
 
   def create_target(attrs \\ %{}) do
-    %Target{}
-    |> Target.changeset(attrs)
-    |> Repo.insert()
+    user_id = extract_option(:user_id, attrs)
+
+    targets =
+      Target
+      |> where(user_id: ^user_id)
+      |> Repo.aggregate(:count, :id)
+
+    if targets < 10 do
+      %Target{}
+      |> Target.changeset(attrs)
+      |> Repo.insert()
+    else
+      {:error, :maximum_reached}
+    end
   end
 
   def update_target(%Target{} = target, attrs) do
@@ -64,5 +75,11 @@ defmodule TargetMvd.Targets do
 
   def change_target(%Target{} = target) do
     Target.changeset(target, %{})
+  end
+
+  def extract_option(key, map, options \\ [default: nil])
+
+  def extract_option(key, map, options) when is_atom(key) do
+    map[key] || map[Atom.to_string(key)] || options[:default]
   end
 end

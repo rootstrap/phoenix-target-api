@@ -69,7 +69,12 @@ defmodule TargetMvd.TargetsTest do
 
     setup [:create_topic, :create_user]
 
-    @valid_attrs %{latitude: 120.5, longitude: 120.5, radius: 42, title: "some title"}
+    @valid_attrs %{
+      latitude: 120.5,
+      longitude: 120.5,
+      radius: 42,
+      title: "some title"
+    }
     @invalid_attrs %{latitude: nil, longitude: nil, radius: nil, title: nil}
 
     def target_fixture(attrs \\ %{}, topic: topic, user: user) do
@@ -108,8 +113,11 @@ defmodule TargetMvd.TargetsTest do
              }
     end
 
-    test "create_target/1 with invalid data returns error changeset" do
-      assert {:error, %Ecto.Changeset{}} = Targets.create_target(@invalid_attrs)
+    test "create_target/1 with invalid data returns error changeset", %{topic: topic, user: user} do
+      assert {:error, %Ecto.Changeset{}} =
+               Targets.create_target(
+                 Map.merge(@invalid_attrs, %{topic_id: topic.id, user_id: user.id})
+               )
     end
 
     test "delete_target/1 deletes the target", %{topic: topic, user: user} do

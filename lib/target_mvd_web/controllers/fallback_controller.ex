@@ -6,6 +6,12 @@ defmodule TargetMvdWeb.FallbackController do
   """
   use TargetMvdWeb, :controller
 
+  def call(conn, {:error, :maximum_reached}) do
+    conn
+    |> put_status(:unprocessable_entity)
+    |> render("error.json", %{detail: gettext("Target maximum limit reached")})
+  end
+
   def call(conn, {:error, %Ecto.Changeset{} = changeset}) do
     conn
     |> put_status(:unprocessable_entity)

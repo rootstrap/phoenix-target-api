@@ -7,8 +7,6 @@
 # General application configuration
 use Mix.Config
 
-import_config "env.local.exs"
-
 config :target_mvd,
   ecto_repos: [TargetMvd.Repo]
 

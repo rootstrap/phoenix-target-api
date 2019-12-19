@@ -19,4 +19,8 @@ defmodule TargetMvdWeb.API.V1.TargetView do
       longitude: target.longitude
     }
   end
+
+  def render("error.json", %{detail: detail}) do
+    %{errors: %{detail: detail}}
+  end
 end
