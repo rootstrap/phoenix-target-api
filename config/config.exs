@@ -16,7 +16,7 @@ config :target_mvd,
 config :target_mvd, :pow,
   user: TargetMvd.Users.User,
   repo: TargetMvd.Repo,
-  extensions: [PowEmailConfirmation],
+  extensions: [PowEmailConfirmation, PowResetPassword],
   mailer_backend: TargetMvdWeb.PowMailer
 
 # Mailer config

@@ -1,6 +1,5 @@
 defmodule TargetMvdWeb.API.V1.RegistrationControllerTest do
   use ExUnit.Case
-  use Bamboo.Test
   use TargetMvdWeb.ConnCase
 
   alias TargetMvd.Repo

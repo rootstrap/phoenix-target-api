@@ -55,4 +55,4 @@ config :logger, level: :info
 import_config "prod.secret.exs"
 
 # Config Pow Mailer
-config :target_mvd, :confirmation_mailer, TargetMvdWeb.EmailConfirmationMailer
+config :target_mvd, :mailer, TargetMvdWeb.UserAccountsMailer

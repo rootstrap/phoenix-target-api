@@ -57,4 +57,4 @@ config :phoenix, :stacktrace_depth, 20
 config :phoenix, :plug_init_mode, :runtime
 
 # Config Pow Mailer
-config :target_mvd, :confirmation_mailer, TargetMvdWeb.EmailConfirmationMailer
+config :target_mvd, :mailer, TargetMvdWeb.UserAccountsMailer

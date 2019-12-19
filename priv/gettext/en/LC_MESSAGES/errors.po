@@ -95,3 +95,8 @@ msgstr ""
 
 msgid "must be equal to %{number}"
 msgstr ""
+
+#, elixir-format
+#: lib/target_mvd_web/controllers/api/v1/reset_password_controller.ex:43
+msgid "Invalid token"
+msgstr ""

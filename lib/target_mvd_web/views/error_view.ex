@@ -7,6 +7,10 @@ defmodule TargetMvdWeb.ErrorView do
     %{errors: %{detail: "Not Found"}}
   end
 
+  def render("422.json", %{message: message}) do
+    %{errors: %{detail: message}}
+  end
+
   # By default, Phoenix returns the status message from
   # the template name. For example, "404.json" becomes
   # "Not Found".

@@ -5,7 +5,7 @@ defmodule TargetMvdWeb.API.V1.RegistrationController do
   alias TargetMvd.Users
   alias TargetMvdWeb.ErrorHelpers
 
-  @confirmation_mailer Application.get_env(:target_mvd, :confirmation_mailer)
+  @mailer Application.get_env(:target_mvd, :mailer)
 
   def create(conn, %{"user" => user_params}) do
     conn
@@ -32,7 +32,7 @@ defmodule TargetMvdWeb.API.V1.RegistrationController do
 
   defp send_confirmation_email(conn, user) do
     Users.send_confirmation_email(user, fn unconfirmed_user ->
-      @confirmation_mailer.deliver(conn, user, unconfirmed_user)
+      @mailer.deliver_email_confirmation(conn, user, unconfirmed_user)
     end)
   end
 end
