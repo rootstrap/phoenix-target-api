@@ -3,6 +3,8 @@ defmodule TargetMvd.Fixtures do
   Fixtures module for testing support.
   """
 
+  Faker.start()
+
   alias TargetMvd.Targets
 
   @pow_config [otp_app: :target_mvd]
@@ -12,12 +14,12 @@ defmodule TargetMvd.Fixtures do
     "confirm_password" => "secret1234"
   }
   @topic_params %{
-    name: "some name"
+    name: Faker.Industry.industry()
   }
   @target_params %{
-    latitude: 120.5,
-    longitude: 120.5,
-    radius: 42,
+    latitude: Faker.Address.latitude(),
+    longitude: Faker.Address.longitude(),
+    radius: Faker.random_between(10, 200),
     title: "some title"
   }
 

@@ -54,7 +54,8 @@ defmodule TargetMvd.MixProject do
       {:pow, "~> 1.0.14"},
       {:ecto_enum, "~> 1.4"},
       {:bamboo, "~> 1.3"},
-      {:poison, "~> 3.1"}
+      {:poison, "~> 3.1"},
+      {:faker, "~> 0.13"}
     ]
   end
 
