@@ -36,7 +36,7 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordControllerTest do
         )
 
       assert json = json_response(conn, 422)
-      assert json["error"]["message"] == "User doesn't exist"
+      assert json["errors"]["detail"] == "User doesn't exist"
     end
   end
 
@@ -104,7 +104,6 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordControllerTest do
 
       conn = get(conn, Routes.api_v1_reset_password_path(Endpoint, :show, reset_password_token))
       assert json = json_response(conn, 200)
-      assert json == "ok"
     end
   end
 

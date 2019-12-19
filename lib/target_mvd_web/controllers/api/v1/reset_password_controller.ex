@@ -6,6 +6,8 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordController do
   alias PowResetPassword.Plug, as: PowResetPasswordPlug
   alias TargetMvdWeb.ErrorHelpers
 
+  action_fallback TargetMvdWeb.FallbackController
+
   plug :load_user_from_reset_token when action in [:update, :show]
 
   @mailer Application.get_env(:target_mvd, :mailer)
@@ -19,10 +21,8 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordController do
           detail: gettext("An email has been sent with instructions to reset password.")
         })
 
-      {:error, _changeset, conn} ->
-        conn
-        |> put_status(422)
-        |> json(%{error: %{status: 422, message: dgettext("errors", "User doesn't exist")}})
+      {:error, _changeset, _conn} ->
+        {:error, :unprocessable_entity, dgettext("errors", "User doesn't exist")}
     end
   end
 
@@ -46,7 +46,7 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordController do
         conn
         |> assign(:changeset, changeset)
         |> put_status(200)
-        |> json(:ok)
+        |> json(%{status: "ok"})
     end
   end
 
@@ -55,7 +55,7 @@ defmodule TargetMvdWeb.API.V1.ResetPasswordController do
       nil ->
         conn
         |> put_status(422)
-        |> json(%{error: %{status: 422, message: gettext("Invalid token")}})
+        |> json(%{error: %{status: 422, message: dgettext("errors", "Invalid token")}})
         |> halt()
 
       user ->

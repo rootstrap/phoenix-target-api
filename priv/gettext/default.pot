@@ -11,16 +11,11 @@ msgid ""
 msgstr ""
 
 #, elixir-format
-#: lib/target_mvd_web/controllers/api/v1/reset_password_controller.ex:43
-msgid "Invalid token"
-msgstr ""
-
-#, elixir-format
-#: lib/target_mvd_web/controllers/api/v1/reset_password_controller.ex:26
+#: lib/target_mvd_web/controllers/api/v1/reset_password_controller.ex:32
 msgid "Password updated successfully."
 msgstr ""
 
 #, elixir-format
-#: lib/target_mvd_web/controllers/api/v1/reset_password_controller.ex:20
+#: lib/target_mvd_web/controllers/api/v1/reset_password_controller.ex:21
 msgid "An email has been sent with instructions to reset password."
 msgstr ""

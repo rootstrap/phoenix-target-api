@@ -1,4 +1,4 @@
-defmodule TargetMvdWeb.PowExtensionMailer do
+defmodule TargetMvdWeb.UserAccountsMailer do
   @moduledoc """
   Email confirmation mailer module. Used to deliver emails to
   recently registered users so they can confirm their emails.
@@ -23,7 +23,7 @@ defmodule TargetMvdWeb.PowExtensionMailer do
     email = PowResetPasswordMailer.reset_password(conn, user, url)
 
     Pow.Phoenix.Mailer.deliver(conn, email)
-    {:ok}
+    :ok
   end
 
   defp confirmation_url(token) do
